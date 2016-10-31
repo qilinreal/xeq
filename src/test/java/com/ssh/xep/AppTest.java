@@ -24,25 +24,7 @@ import com.ssh.xep.service.FlowBasicInfoService;
 public class AppTest {
 	private static final Logger LOGGER = Logger.getLogger(AppTest.class);
 
-	@Autowired
-	private FlowBasicInfoService service;
-
 	@Test
 	public void save() throws ParserConfigurationException {
-		FlowBasicInfo info = new FlowBasicInfo();
-		info.setBpmn("123");
-		info.setFlowNum(123);
-		info.setName("444");
-		info.setUserId(3424);
-		Integer id = service.save(info);
-		System.out.println(id);
-	}
-	
-	@Test
-	public void findAll() throws DocumentException {
-		List<FlowBasicInfo> infos = service.findAll();
-		for(FlowBasicInfo f : infos) {
-			System.out.println(f.getId()+"--"+f.getName()+"--"+f.getUserId()+"--"+f.getFlowNum()+"--"+f.getBpmn());
-		}
 	}
 }
