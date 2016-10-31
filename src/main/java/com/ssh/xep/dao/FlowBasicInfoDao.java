@@ -5,5 +5,6 @@ import java.util.List;
 import com.ssh.xep.entity.FlowBasicInfo;
 
 public interface FlowBasicInfoDao extends GenericDao<FlowBasicInfo, Integer> {
-	List<FlowBasicInfo> findAll(Integer userId);
+	List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths);
+	List<FlowBasicInfo> findAll(Integer userId, int[] auths);
 }

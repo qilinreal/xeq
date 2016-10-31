@@ -9,6 +9,7 @@
 <body>
 	<%
 		session.setAttribute("userId", 3424);
+		session.setAttribute("isAdmin", true);
 	%>
 	12312312
 </body>

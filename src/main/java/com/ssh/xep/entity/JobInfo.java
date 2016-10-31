@@ -18,7 +18,7 @@ public class JobInfo implements Serializable {
 	private int id;
 	private int userId;
 	private int flowBasicInfoId;
-	private String fileCharMap;
+	private String bpmn;
 	private String processInfo;
 	private long bgTime;
 	private long edTime;
@@ -52,13 +52,13 @@ public class JobInfo implements Serializable {
 		this.flowBasicInfoId = flowBasicInfoId;
 	}
 
-	@Column(name = "fileCharMap")
-	public String getFileCharMap() {
-		return fileCharMap;
+	@Column(name = "bpmn")
+	public String getBpmn() {
+		return bpmn;
 	}
 
-	public void setFileCharMap(String fileCharMap) {
-		this.fileCharMap = fileCharMap;
+	public void setBpmn(String bpmn) {
+		this.bpmn = bpmn;
 	}
 
 	@Column(name = "processInfo")

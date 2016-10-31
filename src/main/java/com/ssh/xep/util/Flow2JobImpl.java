@@ -20,21 +20,25 @@ import org.dom4j.Element;
  */
 public class Flow2JobImpl implements Flow2Job {
 	private static final String loadNamePrefix = "com.ssh.xep.bpmn.";
-	
+
 	public Flow2JobImpl(int jobId) {
 		jobSeed = String.valueOf(jobId);
 	}
 
 	private void setHeader(Element process, String userId, String jobId) {
-		process.addAttribute("id", loadNamePrefix+userId+"."+jobId);
+		process.addAttribute("id", loadNamePrefix + userId + "." + jobId);
 		process.addAttribute("name", jobId);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String flow2Job(String userId, String jobId, String flow, String jobTools) throws DocumentException, IOException {
+	public String flow2Job(String userId, String jobId, String flow, String jobTools)
+			throws DocumentException, IOException {
 		Document document = DocumentHelper.parseText(flow);
 		Element eFlow = document.getRootElement();
 		document = DocumentHelper.parseText(jobTools);
@@ -59,8 +63,11 @@ public class Flow2JobImpl implements Flow2Job {
 		return document.asXML();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String flow2Job(String userId, String jobId, String flow) throws IOException, DocumentException {
@@ -120,7 +127,7 @@ public class Flow2JobImpl implements Flow2Job {
 				} else if (ref.equals("fromFlow")) {
 					int pos = value.lastIndexOf('-');
 					if (fileInfos.get(value).equals("0")) {
-						sb.append(generateFileName(value.substring(0, pos), value.substring(pos)));
+						sb.append("/tmp/" + generateFileName(value.substring(0, pos), value.substring(pos)));
 					} else {
 						sb.append("$");
 						sb.append(fileInfos.get(value));

@@ -2,6 +2,8 @@ package com.ssh.xep.action;
 
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -14,11 +16,14 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
 import com.ssh.xep.entity.FlowBasicInfo;
+import com.ssh.xep.entity.FlowGroupInfo;
 import com.ssh.xep.entity.ToolTypes;
 import com.ssh.xep.entity.Tools;
 import com.ssh.xep.service.FlowBasicInfoService;
+import com.ssh.xep.service.FlowGroupInfoService;
 import com.ssh.xep.service.ToolTypesService;
 import com.ssh.xep.service.ToolsService;
+import com.ssh.xep.util.MakeBpmn;
 
 @Namespace("/flow")
 @Result(name = ActionSupport.ERROR, location = "/WEB-INF/error.jsp")
@@ -30,8 +35,10 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	private FlowBasicInfo info;
 	private List<FlowBasicInfo> infos;
+	private List<FlowGroupInfo> groups;
 	private List<Tools> tools;
 	private List<ToolTypes> toolTypes;
+	private int groupId;
 
 	@Autowired
 	private FlowBasicInfoService service;
@@ -41,6 +48,33 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	@Autowired
 	private ToolTypesService toolTypesService;
+
+	@Autowired
+	private FlowGroupInfoService flowGroupInfoService;
+
+	public List<FlowGroupInfo> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<FlowGroupInfo> groups) {
+		this.groups = groups;
+	}
+
+	public List<ToolTypes> getToolTypes() {
+		return toolTypes;
+	}
+
+	public void setToolTypes(List<ToolTypes> toolTypes) {
+		this.toolTypes = toolTypes;
+	}
+
+	public int getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
 
 	public FlowBasicInfo getInfo() {
 		return info;
@@ -82,7 +116,18 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	public String execute() throws Exception {
 		LOGGER.info("查询所有流程");
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
-		infos = service.findAll(userId);
+		boolean isAdmin = (boolean) (ServletActionContext.getRequest().getSession().getAttribute("isAdmin"));
+		int[] auths;
+		if (isAdmin) {
+			auths = new int[] { 1, 2 };
+		} else {
+			auths = new int[] { 2 };
+		}
+		if (groupId != 0) {
+			infos = service.findAll(userId, groupId, auths);
+		} else {
+			infos = service.findAll(userId, auths);
+		}
 
 		return SUCCESS;
 	}
@@ -101,20 +146,25 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	}
 
 	@Action(value = "modify", results = { @Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
-	public String modify() throws DocumentException, ParserConfigurationException {
+	public String modify() throws DocumentException, ParserConfigurationException, TransformerFactoryConfigurationError,
+			TransformerException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
 		Integer userId = (Integer) ServletActionContext.getRequest().getSession().getAttribute("userId");
 		tools = toolService.findAll(userId);
 		toolTypes = toolTypesService.findAll();
+		groups = flowGroupInfoService.findAll();
 		if (id == null) {
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
-			info.setBpmn("");
+			info.setFlow(new MakeBpmn(String.valueOf(userId)).get());
 			info.setFlowNum(0);
 			info.setUserId(userId);
 			info.setName("NO NAME");
+			info.setAuth((short) 0);
+			info.setGroupId(1);
 			id = String.valueOf(service.save(info));
+			info.setId(Integer.parseInt(id));
 		} else {
 			ServletActionContext.getRequest().setAttribute("create", "修改");
 			info = service.get(Integer.parseInt(id));
@@ -128,7 +178,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	@Action(value = "modify-commit", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp") })
 	public String modifyCommit() throws ParserConfigurationException {
-		if (info.getBpmn() == null || info.getBpmn().equals("") || info.getId() == 0) {
+		if (info.getFlow() == null || info.getFlow().equals("") || info.getId() == 0) {
 			ServletActionContext.getRequest().setAttribute("errorInformation", "数据缺失");
 			return ERROR;
 		}

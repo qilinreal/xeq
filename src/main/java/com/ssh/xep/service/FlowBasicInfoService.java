@@ -15,7 +15,9 @@ public interface FlowBasicInfoService {
 
 	List<FlowBasicInfo> findAll() throws DocumentException;
 
-	List<FlowBasicInfo> findAll(Integer userId) throws DocumentException;
+	List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths) throws DocumentException;
+	
+	List<FlowBasicInfo> findAll(Integer userId, int[] auths) throws DocumentException;
 
 	void pessist(FlowBasicInfo entity);
 

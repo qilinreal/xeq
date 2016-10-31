@@ -19,7 +19,9 @@ public class FlowBasicInfo implements Serializable {
 	private String name;
 	private int userId;
 	private int flowNum;
-	private String bpmn;
+	private String flow;
+	private short auth = 0;
+	private int groupId = 1;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -59,13 +61,31 @@ public class FlowBasicInfo implements Serializable {
 		this.flowNum = flowNum;
 	}
 
-	@Column(name = "bpmn")
-	public String getBpmn() {
-		return bpmn;
+	@Column(name = "flow")
+	public String getFlow() {
+		return flow;
 	}
 
-	public void setBpmn(String bpmn) {
-		this.bpmn = bpmn;
+	public void setFlow(String flow) {
+		this.flow = flow;
+	}
+
+	@Column(name = "auth")
+	public short getAuth() {
+		return auth;
+	}
+
+	public void setAuth(short auth) {
+		this.auth = auth;
+	}
+
+	@Column(name = "groupId", nullable = false)
+	public int getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
 	}
 
 }

@@ -1,1 +1,1 @@
-SELECT * FROM devLog;
+show tables;

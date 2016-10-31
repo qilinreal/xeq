@@ -32,9 +32,38 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 		return infos;
 	}
 
-	public List<FlowBasicInfo> findAll(Integer userId) {
-		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo where userId=?0")
-				.setInteger("0", userId).list();
+	public List<FlowBasicInfo> findAll(Integer userId, int[] auths) {
+		String sql = "from FlowBasicInfo where userId=?0 ";
+		if (auths != null && auths.length != 0) {
+			sql += "or auth in (";
+			for (int auth : auths) {
+				sql += auth;
+				sql += ",";
+			}
+			if (sql.endsWith(",")) {
+				sql = sql.substring(0, sql.length() - 1);
+			}
+			sql += ")";
+		}
+		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("0", userId).list();
+		return infos;
+	}
+
+	public List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths) {
+		String sql = "from FlowBasicInfo where groupId=?0 and (userId=?1 ";
+		if (auths != null && auths.length != 0) {
+			sql += "or auth in (";
+			for (int auth : auths) {
+				sql += auth;
+				sql += ",";
+			}
+			if (sql.endsWith(",")) {
+				sql = sql.substring(0, sql.length() - 1);
+			}
+			sql += ")";
+		}
+		sql += ")";
+		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("1", userId).setInteger("0", groupId).list();
 		return infos;
 	}
 
