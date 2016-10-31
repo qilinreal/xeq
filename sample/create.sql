@@ -2,7 +2,7 @@ create table flowGroupInfo (id int primary key auto_increment, name varchar(50) 
 insert into flowGroupInfo (name, intro) values('无分组', '无分组');
 create table flowBasicInfo (id int primary key auto_increment, name varchar(50) not null, userId int not null, groupId int default 1, auth smallint not null default 0, flowNum int, flow text);
 -- auth 0 私有 1共享 2系统
-create table jobInfo (id int primary key auto_increment, userId int not null, flowBasicInfoId int not null, fileCharMap varchar(200), processInfo text);
+create table jobInfo (id int primary key auto_increment, userId int not null, flowBasicInfoId int not null, bpmn text, processInfo text);
 
 create table user (id int primary key auto_increment, name varchar(50) not null, password varchar(50) not null);
 create table fileupload_library_folder (id int primary key auto_increment, parent_id_id int default null, create_time varchar(50), update_time varchar(50), name varchar(50), deleted smallint default 0);
