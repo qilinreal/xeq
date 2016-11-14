@@ -134,6 +134,7 @@ function Flow(bindID, xmlStr, editable) {
 		if(id == '_1' || id == '_3') {
 			return false;
 		}
+		return true;
 	};
 	instance.onItemAdd = function(id, type, json) {
 		if(type == 'node') {			// 加点
@@ -213,6 +214,24 @@ function Flow(bindID, xmlStr, editable) {
     });
 
 
+    this.setToolTipInfo = function(id) {
+    	var div = document.getElementById(id);
+    	div.style.position = 'fixed';
+    	div.style.display = 'none';
+    	div.style.border = div.style.border || 'solid 1px';
+    	div.style.backgroundColor = div.style.backgroundColor || "white";
+    	var title = document.getElementById('titleDom');
+    	title.addEventListener('mousemove', function(e) {
+    		div.style.left = (e.clientX+20)+"px";
+    		div.style.top = (e.clientY+20)+"px";
+    	});
+    	title.addEventListener('mouseenter', function(e) {
+    		div.style.display = 'block';
+    	});
+    	title.addEventListener('mouseleave', function(e) {
+    		div.style.display = 'none';
+    	});
+    };
 	this.getInstance = function() {
 		return instance;
 	};
