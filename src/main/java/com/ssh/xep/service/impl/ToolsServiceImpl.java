@@ -80,7 +80,6 @@ public class ToolsServiceImpl implements ToolsService {
 		dao.flush();
 	}
 
-	@Override
 	public String getXML(String xmlOrPath) {
 		if (xmlOrPath.startsWith("<?")) {
 			return xmlOrPath;

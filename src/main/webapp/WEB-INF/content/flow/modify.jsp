@@ -14,10 +14,21 @@
 <head>
 <base href="<%=basePath%>" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="js/jquery-latest.js"></script>
+<script type="text/javascript" src="js/GooFunc.js"></script>
+<script type="text/javascript" src="js/my.js"></script>
+<script type="text/javascript" src="js/flow.js"></script>
 <title>${create }流程</title>
 </head>
 <body>
 	<p>id is ${id }</p>
 	<p>${info.bpmn }</p>
+	
+	<div id='flow'>
+	</div>
+	
+	<script type="text/javascript">
+    	var instance = new Flow('flow', "${info.bpmn}");
+	</script>
 </body>
 </html>

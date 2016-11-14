@@ -116,7 +116,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	public String execute() throws Exception {
 		LOGGER.info("查询所有流程");
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
-		boolean isAdmin = (boolean) (ServletActionContext.getRequest().getSession().getAttribute("isAdmin"));
+		boolean isAdmin = (Boolean) (ServletActionContext.getRequest().getSession().getAttribute("isAdmin"));
 		int[] auths;
 		if (isAdmin) {
 			auths = new int[] { 1, 2 };

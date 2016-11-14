@@ -36,7 +36,6 @@ public class Flow2JobImpl implements Flow2Job {
 	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@Override
 	public String flow2Job(String userId, String jobId, String flow, String jobTools)
 			throws DocumentException, IOException {
 		Document document = DocumentHelper.parseText(flow);
@@ -69,7 +68,6 @@ public class Flow2JobImpl implements Flow2Job {
 	 * @see com.ssh.xep.util.Flow2Job#flow2Job(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
-	@Override
 	public String flow2Job(String userId, String jobId, String flow) throws IOException, DocumentException {
 		Document document = DocumentHelper.parseText(flow);
 		Element eFlow = document.getRootElement();
@@ -209,7 +207,7 @@ public class Flow2JobImpl implements Flow2Job {
 	 */
 	// 来自流程，节点名字是process
 	private void indexOutputFileFromFlow(Element process) {
-		fileInfos = new HashMap<>();
+		fileInfos = new HashMap<String, String>();
 
 		List<Element> el = process.elements("scriptTask");
 		for (Element e : el) {
@@ -221,7 +219,7 @@ public class Flow2JobImpl implements Flow2Job {
 
 	// 来自工具，节点名字是tools
 	private void indexOutputFileFromTool(Element tools) {
-		fileInfos = new HashMap<>();
+		fileInfos = new HashMap<String, String>();
 
 		List<Element> el = tools.elements("tool");
 		for (Element e : el) {

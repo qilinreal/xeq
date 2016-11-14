@@ -48,7 +48,6 @@
 			sourceRef="_jbpm-unique-15" targetRef="_jbpm-unique-18" />
 		<sequenceFlow id="_jbpm-unique-17-_jbpm-unique-19"
 			sourceRef="_jbpm-unique-17" targetRef="_jbpm-unique-19" />
-
 	</process>
 
 	<bpmndi:BPMNDiagram>

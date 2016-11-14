@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.Preparable;
 public class LogViewer extends ActionSupport implements Preparable {
 	private static final long serialVersionUID = -1310951828876142446L;
 
-	@Override
 	public void prepare() throws Exception {
 	}
 
@@ -86,9 +85,9 @@ public class LogViewer extends ActionSupport implements Preparable {
 		ps.setString(1, bgDate);
 		ps.setString(2, edDate);
 		ResultSet rs = ps.executeQuery();
-		res = new ArrayList<>();
+		res = new ArrayList<Map<String, String>>();
 		while (rs.next()) {
-			Map<String, String> m = new HashMap<>();
+			Map<String, String> m = new HashMap<String, String>();
 			m.put("id", rs.getString(1));
 			m.put("log", rs.getString("log"));
 			m.put("time", rs.getString("time"));

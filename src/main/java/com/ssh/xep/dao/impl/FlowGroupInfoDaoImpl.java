@@ -19,44 +19,36 @@ public class FlowGroupInfoDaoImpl implements FlowGroupInfoDao {
 		return this.sessionFactory.getCurrentSession();
 	}
 
-	@Override
 	public FlowGroupInfo load(Integer id) {
 		return (FlowGroupInfo) getSession().load(FlowGroupInfo.class, id);
 	}
 
-	@Override
 	public FlowGroupInfo get(Integer id) {
 		return (FlowGroupInfo) getSession().get(FlowGroupInfo.class, id);
 	}
 
-	@Override
 	public List<FlowGroupInfo> findAll() {
 		List<FlowGroupInfo> infos = getSession().createQuery("from FlowGroupInfo").list();
 		return infos;
 	}
 
-	@Override
 	public void persist(FlowGroupInfo entity) {
 		getSession().persist(entity);
 	}
 
-	@Override
 	public Integer save(FlowGroupInfo entity) {
 		return (Integer) getSession().save(entity);
 	}
 
-	@Override
 	public void saveOrUpdate(FlowGroupInfo entity) {
 		getSession().saveOrUpdate(entity);
 	}
 
-	@Override
 	public void delete(Integer id) {
 		FlowGroupInfo entity = load(id);
 		getSession().delete(entity);
 	}
 
-	@Override
 	public void flush() {
 		getSession().flush();
 	}
