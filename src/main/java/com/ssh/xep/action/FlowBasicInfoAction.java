@@ -39,6 +39,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	private List<Tools> tools;
 	private List<ToolTypes> toolTypes;
 	private int groupId;
+	private String startDate, endDate;
 
 	@Autowired
 	private FlowBasicInfoService service;
@@ -117,6 +118,12 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		LOGGER.info("查询所有流程");
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
 		boolean isAdmin = (Boolean) (ServletActionContext.getRequest().getSession().getAttribute("isAdmin"));
+		if(startDate == null) {
+			startDate = "1900/01/01";
+		}
+		if(endDate == null) {
+			endDate = "2100/10/10";
+		}
 		int[] auths;
 		if (isAdmin) {
 			auths = new int[] { 1, 2 };
@@ -155,12 +162,23 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		toolTypes = toolTypesService.findAll();
 		groups = flowGroupInfoService.findAll();
 		if (id == null) {
+			String flowName = ServletActionContext.getRequest().getParameter("flowName");
+			String authStr = ServletActionContext.getRequest().getParameter("auth");
+			String groupId = ServletActionContext.getRequest().getParameter("groupId");
+			if(groupId == null) {
+				groupId = "1";
+			}
+			if(flowName==null || authStr==null) {
+				ServletActionContext.getRequest().setAttribute("errorInformation", "缺少参数。");
+				return ERROR;
+			}
+
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
 			info.setFlow(new MakeBpmn(String.valueOf(userId)).get());
 			info.setFlowNum(0);
 			info.setUserId(userId);
-			info.setName("NO NAME");
+			info.setName(flowName);
 			info.setAuth((short) 0);
 			info.setGroupId(1);
 			id = String.valueOf(service.save(info));

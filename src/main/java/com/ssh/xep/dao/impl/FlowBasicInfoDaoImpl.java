@@ -32,8 +32,8 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 		return infos;
 	}
 
-	public List<FlowBasicInfo> findAll(Integer userId, int[] auths) {
-		String sql = "from FlowBasicInfo where userId=?0 ";
+	public List<FlowBasicInfo> findAll(Integer userId, int[] auths, String startDate, String endDate) {
+		String sql = "from FlowBasicInfo where 1=1 and (userId=?0 ";
 		if (auths != null && auths.length != 0) {
 			sql += "or auth in (";
 			for (int auth : auths) {
@@ -43,13 +43,14 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 			if (sql.endsWith(",")) {
 				sql = sql.substring(0, sql.length() - 1);
 			}
-			sql += ")";
+			sql += "))";
 		}
-		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("0", userId).list();
+		sql += " and (createDate between ?1 and ?2)";
+		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("0", userId).setString("1", startDate).setString("2", endDate).list();
 		return infos;
 	}
 
-	public List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths) {
+	public List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths, String startDate, String endDate) {
 		String sql = "from FlowBasicInfo where groupId=?0 and (userId=?1 ";
 		if (auths != null && auths.length != 0) {
 			sql += "or auth in (";
@@ -63,7 +64,8 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 			sql += ")";
 		}
 		sql += ")";
-		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("1", userId).setInteger("0", groupId).list();
+		sql += " and (createDate between ?2 and ?3)";
+		List<FlowBasicInfo> infos = getSession().createQuery(sql).setInteger("1", userId).setInteger("0", groupId).setString("2", startDate).setString("3", endDate).list();
 		return infos;
 	}
 

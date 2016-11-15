@@ -22,6 +22,7 @@ public class FlowBasicInfo implements Serializable {
 	private String flow;
 	private short auth = 0;
 	private int groupId = 1;
+	private String createDate = "2016/01/01";
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -88,4 +89,12 @@ public class FlowBasicInfo implements Serializable {
 		this.groupId = groupId;
 	}
 
+	@Column(name = "createDate", nullable = false)
+	public int getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(int createDate) {
+		this.createDate = createDate;
+	}
 }

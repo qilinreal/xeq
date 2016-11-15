@@ -23,6 +23,6 @@
 	<p>用户ID：${info.userId }</p>
 	<p>节点数量：${info.flowNum }</p>
 	<p>详细信息：</p>
-	<p>${info.bpmn }</p>
+	<p>${info.flow }</p>
 </body>
 </html>

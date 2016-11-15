@@ -30,13 +30,13 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 		return infos;
 	}
 
-	public List<FlowBasicInfo> findAll(Integer userId, int[] auths) throws DocumentException {
-		List<FlowBasicInfo> infos = dao.findAll(userId, auths);
+	public List<FlowBasicInfo> findAll(Integer userId, int[] auths, String startDate, String endDate) throws DocumentException {
+		List<FlowBasicInfo> infos = dao.findAll(userId, auths, startDate, endDate);
 		return infos;
 	}
 
-	public List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths) throws DocumentException {
-		List<FlowBasicInfo> infos = dao.findAll(userId, groupId, auths);
+	public List<FlowBasicInfo> findAll(Integer userId, Integer groupId, int[] auths, String startDate, String endDate) throws DocumentException {
+		List<FlowBasicInfo> infos = dao.findAll(userId, groupId, auths, startDate, endDate);
 		return infos;
 	}
 
