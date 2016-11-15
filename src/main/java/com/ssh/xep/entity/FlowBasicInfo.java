@@ -90,11 +90,11 @@ public class FlowBasicInfo implements Serializable {
 	}
 
 	@Column(name = "createDate", nullable = false)
-	public int getCreateDate() {
+	public String getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(int createDate) {
+	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
 }

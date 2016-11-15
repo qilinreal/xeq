@@ -23,10 +23,13 @@
 <body>
 	<p>id is ${id }</p>
 	<p>${info.bpmn }</p>
+	<p>${tools }</p>
+	<p>${toolTypes }</p>
+	<p>${groups }</p>
 	
 	<div id='flow'>
 	</div>
-	
+
 	<script type="text/javascript">
     	var instance = new Flow('flow', "${info.bpmn}");
 	</script>

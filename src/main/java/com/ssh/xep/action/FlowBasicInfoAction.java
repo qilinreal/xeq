@@ -118,10 +118,10 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		LOGGER.info("查询所有流程");
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
 		boolean isAdmin = (Boolean) (ServletActionContext.getRequest().getSession().getAttribute("isAdmin"));
-		if(startDate == null) {
+		if (startDate == null) {
 			startDate = "1900/01/01";
 		}
-		if(endDate == null) {
+		if (endDate == null) {
 			endDate = "2100/10/10";
 		}
 		int[] auths;
@@ -131,10 +131,11 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 			auths = new int[] { 2 };
 		}
 		if (groupId != 0) {
-			infos = service.findAll(userId, groupId, auths);
+			infos = service.findAll(userId, groupId, auths, startDate, endDate);
 		} else {
-			infos = service.findAll(userId, auths);
+			infos = service.findAll(userId, auths, startDate, endDate);
 		}
+		groups = flowGroupInfoService.findAll();
 
 		return SUCCESS;
 	}
@@ -165,10 +166,10 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 			String flowName = ServletActionContext.getRequest().getParameter("flowName");
 			String authStr = ServletActionContext.getRequest().getParameter("auth");
 			String groupId = ServletActionContext.getRequest().getParameter("groupId");
-			if(groupId == null) {
+			if (groupId == null) {
 				groupId = "1";
 			}
-			if(flowName==null || authStr==null) {
+			if (flowName == null || authStr == null) {
 				ServletActionContext.getRequest().setAttribute("errorInformation", "缺少参数。");
 				return ERROR;
 			}
