@@ -347,6 +347,9 @@ function GooFlow(bgDiv, property) {
         //当用重色标注某个结点/转换线时触发的方法，返回FALSE可阻止重定大小/造型事件的发生
         //格式function(id，type，mark)：id是单元的唯一标识ID,type是单元类型（"node"结点,"line"转换线），mark为布尔值,表示是要标注TRUE还是取消标注FALSE
         this.onItemMark = null;
+        // 我添加：在用户双击节点时发生
+        // function(idPointer)
+        this.onDblclickNode = null;
 
         if (property.useOperStack && this.$editable) {//如果要使用堆栈记录操作并提供“撤销/重做”的功能,只在编辑状态下有效
             this.$undoStack = [];
@@ -974,11 +977,13 @@ GooFlow.prototype = {
             if(id == '_1' || id == '_3') {
             	return;
             }
-            
-            // 此处打开新窗口，传入ID，在子窗口更新夫窗口的值
+            // 此处打开新窗口，传入ID，在子窗口更新父窗口的值
             // This.setName(This.$textArea.data("id"), This.$textArea.val(), "node");
             // var pInstance = window.instance.getInstance();
             // pInstance.setName(pInstance.$textArea.data("id"), value, "node")
+            if(This.$editable && This.onDblclickNode) {
+                This.onDblclickNode(This.$textArea.data("id"));
+            }
 //            var t = getElCoordinate(This.$workArea[0]);
 //            This.$textArea.val(oldTxt).css({
 //                display: "block", width: $(this).width() + 24, height: $(this).height(),

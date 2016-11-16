@@ -1,8 +1,8 @@
 package com.ssh.xep.util;
 
-import java.io.IOException;
-
 import org.dom4j.DocumentException;
+
+import java.io.IOException;
 
 public interface Flow2Job {
 
@@ -10,7 +10,7 @@ public interface Flow2Job {
 
 	/**
 	 * 这个将jobTools放进了flow之中
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws DocumentException
 	 */

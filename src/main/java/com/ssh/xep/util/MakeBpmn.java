@@ -1,24 +1,19 @@
 package com.ssh.xep.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 生成BPMN文件
- * 
+ *
  * @author qilin
  */
 public class MakeBpmn {
@@ -32,11 +27,9 @@ public class MakeBpmn {
 
 	/**
 	 * 初始化，创建bpmn文件的雏形
-	 * 
-	 * @param loadName
-	 *            执行bpmn文件时需要的名字，会被冠以前缀，作为id存在 id是loadNamePrefix【loadName】
-	 * @param name
-	 *            bpmn文件中process的name
+	 *
+	 * @param loadName 执行bpmn文件时需要的名字，会被冠以前缀，作为id存在 id是loadNamePrefix【loadName】
+	 * @param name     bpmn文件中process的name
 	 * @throws ParserConfigurationException
 	 */
 	public MakeBpmn(String loadName, String name) throws ParserConfigurationException {
@@ -86,26 +79,28 @@ public class MakeBpmn {
 
 		Element plane = e2.addElement("bpmndi:BPMNPlane", "http://www.omg.org/spec/BPMN/20100524/DI");
 		plane.addAttribute("bpmnElement", loadNamePrefix + loadName);
+		plane.addElement("bpmndi:BPMNShape", "http://www.omg.org/spec/BPMN/20100524/DI").addAttribute("bpmnElement", "_1")
+				.addElement("dc:Bounds", "http://www.omg.org/spec/DD/20100524/DC").addAttribute("x", "50")
+				.addAttribute("y", "50").addAttribute("width", "24").addAttribute("height", "24");
+		plane.addElement("bpmndi:BPMNShape", "http://www.omg.org/spec/BPMN/20100524/DI").addAttribute("bpmnElement", "_3")
+				.addElement("dc:Bounds", "http://www.omg.org/spec/DD/20100524/DC").addAttribute("x", "500")
+				.addAttribute("y", "50").addAttribute("width", "24").addAttribute("height", "24");
 	}
 
 	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
-			File scriptFile, String addOn) throws IOException {
+						File scriptFile, String addOn) throws IOException {
 		addTask(taskId, name, toolId, toolName, toolType, toolPath, scriptFile, null, addOn);
 	}
 
 	/**
-	 * @param taskId
-	 *            任务ID
-	 * @param name
-	 *            任务名称
-	 * @param scriptFile
-	 *            脚本文件，里面包含了完整的脚本
-	 * @param exts
-	 *            引用包
+	 * @param taskId     任务ID
+	 * @param name       任务名称
+	 * @param scriptFile 脚本文件，里面包含了完整的脚本
+	 * @param exts       引用包
 	 * @throws IOException
 	 */
 	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
-			File scriptFile, String exts, String addOn) throws IOException {
+						File scriptFile, String exts, String addOn) throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
 		BufferedReader br = new BufferedReader(isr);
@@ -121,12 +116,12 @@ public class MakeBpmn {
 	}
 
 	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
-			String script, String addOn) {
+						String script, String addOn) {
 		addTask(taskId, name, toolId, toolName, toolType, toolPath, script, (String) null, addOn);
 	}
 
 	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
-			String script, String exts, String addOn) {
+						String script, String exts, String addOn) {
 		if (exts != null) {
 			addTask(taskId, name, toolId, toolName, toolType, toolPath, script, exts.split(";"), addOn);
 		} else {
@@ -135,17 +130,13 @@ public class MakeBpmn {
 	}
 
 	/**
-	 * @param taskId
-	 *            任务ID
-	 * @param dataName
-	 *            任务名称
-	 * @param script
-	 *            执行脚本，完整脚本
-	 * @param exts
-	 *            引用包，完整形式，包含import
+	 * @param taskId   任务ID
+	 * @param dataName 任务名称
+	 * @param script   执行脚本，完整脚本
+	 * @param exts     引用包，完整形式，包含import
 	 */
 	public void addTask(String taskId, String dataName, int toolId, String toolName, String toolType, String toolPath,
-			String script, String[] exts, String addOn) {
+						String script, String[] exts, String addOn) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
 			e = e.element("process").element("extensionElements");
@@ -194,11 +185,9 @@ public class MakeBpmn {
 
 	/**
 	 * 将不同id的script联系在一起，会判断_1和_3
-	 * 
-	 * @param fromId
-	 *            源id，会被加上前缀
-	 * @param toId
-	 *            目的id，会被加上前缀
+	 *
+	 * @param fromId 源id，会被加上前缀
+	 * @param toId   目的id，会被加上前缀
 	 */
 	public void addConnection(String fromId, String toId) {
 		String sourceRef = fromId;
@@ -216,9 +205,8 @@ public class MakeBpmn {
 
 	/**
 	 * 添加分开节点
-	 * 
-	 * @param gatewayId
-	 *            会被加上前缀
+	 *
+	 * @param gatewayId 会被加上前缀
 	 */
 	public void addDiverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;
@@ -228,9 +216,8 @@ public class MakeBpmn {
 
 	/**
 	 * 添加合并节点
-	 * 
-	 * @param gatewayId
-	 *            会被加上前缀
+	 *
+	 * @param gatewayId 会被加上前缀
 	 */
 	public void addConverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;

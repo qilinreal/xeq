@@ -7,7 +7,7 @@
  * 流程类
  * @param {String} bindID 节点ID
  */
-function Flow(bindID, xmlStr, editable) {
+function Flow(bindID, xmlStr, editable, title) {
 	/*jsondata = {
 		title: "流程设计",
 		nodes: {
@@ -39,15 +39,16 @@ function Flow(bindID, xmlStr, editable) {
         task: "任务结点"
     };
 
-	xmlStr = xmlStr || '<?xml version="1.0" encoding="UTF-8"?><definitions id="Definition" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes" expressionLanguage="http://www.mvel.org/2.0" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"	xmlns:tns="http://www.jboss.org/drools"><process processType="Private" isExecutable="true" name="新建流程"><startEvent id="_1"></startEvent><endEvent id="_3"></endEvent></process><bpmndi:BPMNDiagram><bpmndi:BPMNPlane bpmnElement="com.sample.bpmn.hello2"></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></definitions>';
+	xmlStr = xmlStr || '<?xml version="1.0" encoding="UTF-8"?><definitions id="Definition" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes" expressionLanguage="http://www.mvel.org/2.0" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"	xmlns:tns="http://www.jboss.org/drools"><process processType="Private" isExecutable="true" name="新建模板"><startEvent id="_1"></startEvent><endEvent id="_3"></endEvent></process><bpmndi:BPMNDiagram><bpmndi:BPMNPlane bpmnElement="com.sample.bpmn.hello2"></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></definitions>';
 	var xmlDoc = new DOMParser().parseFromString(xmlStr, 'text/xml');
 
+	var idPointer;
     var instance;
     var jsondata = {};
 	var process = xmlDoc.getElementsByTagName('process')[0];
 	var BPMNPlane = xmlDoc.getElementsByTagName('BPMNDiagram')[0].getElementsByTagName('BPMNPlane')[0];
 	(function() {		// init jsondata
-		jsondata.title = process.getAttribute('name');
+		jsondata.title = title || process.getAttribute('name');
 		var jsonNodes = jsondata.nodes = {};
 		jsonNodes._1 = {name: "start", left: 50, top: 50, type: "start", width: 24, height: 24};
 		jsonNodes._3 = {name: "end", left: 500, top: 50, type: "end", width: 24, height: 24};
@@ -69,8 +70,10 @@ function Flow(bindID, xmlStr, editable) {
 			var Bounds = BPMNShapes[i].children[0];
 			var x = Bounds.getAttribute('x');
 			var y = Bounds.getAttribute('y');
-			jsonNodes[id].top = x;
-			jsonNodes[id].left = y;
+			var width = Bounds.getAttribute('width');
+			var height = Bounds.getAttribute('height');
+			jsonNodes[id].top = parseInt(y);
+			jsonNodes[id].left = parseInt(x);
 		}
 
 		var sequenceFlows = process.getElementsByTagName('sequenceFlow');
@@ -89,7 +92,7 @@ function Flow(bindID, xmlStr, editable) {
 				marked: false
 			};
 		}
-		
+
 		// 取出所有分支合并节点，查找流程中目标是分支的连线，
 		// 查找源是分支的连线，修改源为上面获取的值
 		var parallelGateways = process.getElementsByTagName('parallelGateway');
@@ -124,19 +127,34 @@ function Flow(bindID, xmlStr, editable) {
 	})();
 
     instance = $.createGooFlow($("#"+bindID), property);
+
     if(editable) {
     	instance.setNodeRemarks(remark);
     }
+	instance.$max = 9;
+	instance.loadData(jsondata);
     instance.onBtnSaveClick = function () {
+		if(instance.$editable == false) {
+			return false;
+		}
+
         alert('God bless.');
     };
 	instance.onItemDel = function (id, type) {
+		if(instance.$editable == false) {
+			return false;
+		}
+
 		if(id == '_1' || id == '_3') {
 			return false;
 		}
 		return true;
 	};
 	instance.onItemAdd = function(id, type, json) {
+		if(instance.$editable == false) {
+			return false;
+		}
+
 		if(type == 'node') {			// 加点
 			/*var script = xmlDoc.createElement('scriptTask');
 			script.setAttribute('id', id);
@@ -173,15 +191,28 @@ function Flow(bindID, xmlStr, editable) {
 		return true;
 	};
 	instance.onItemMove = function(id, type, left, top) {
+		if(instance.$editable == false) {
+			return false;
+		}
+
 		return true;
 	};
 	instance.onItemRename = function(id,name,type) {
+		if(instance.$editable == false) {
+			return false;
+		}
+
 		return true;
 	};
-	
-    instance.$max = 9;
-    instance.loadData(jsondata);
-    
+	instance.onDblclickNode = function(idP) {
+		if(instance.$editable == false) {
+			return false;
+		}
+
+		idPointer = idP;
+		instance.$editable = false;
+	};
+
     var titleBox = document.createElement('input');
     titleBox.id = 'titleBox';
     titleBox.style.position = 'absolute';
@@ -189,11 +220,15 @@ function Flow(bindID, xmlStr, editable) {
     titleBox.style.top = '3px';
     titleBox.style.width = '145px';
     titleBox.style.display = 'none';
-    if(document.getElementById(bindID).style.position == undefined) {
+	if(!document.getElementById(bindID).style.position) {
     	document.getElementById(bindID).style.position = 'relative';
     };
     document.getElementById(bindID).appendChild(titleBox);
     document.getElementById('titleDom').addEventListener('dblclick', function() {
+		if(instance.$editable == false) {
+			return false;
+		}
+
     	var text = instance.$title;
     	titleBox.value = text;
     	titleBox.style.display = 'inline-block';
@@ -214,12 +249,17 @@ function Flow(bindID, xmlStr, editable) {
     });
 
 
+	this.setName = function (value) {
+		instance.setName(idPointer, value, "node");
+		instance.$editable = true;
+	};
     this.setToolTipInfo = function(id) {
     	var div = document.getElementById(id);
     	div.style.position = 'fixed';
     	div.style.display = 'none';
     	div.style.border = div.style.border || 'solid 1px';
     	div.style.backgroundColor = div.style.backgroundColor || "white";
+		div.style.zIndex = div.style.zIndex || 1;
     	var title = document.getElementById('titleDom');
     	title.addEventListener('mousemove', function(e) {
     		div.style.left = (e.clientX+20)+"px";

@@ -1,17 +1,5 @@
 package com.ssh.xep.action;
 
-import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.dom4j.DocumentException;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
@@ -24,6 +12,20 @@ import com.ssh.xep.service.FlowGroupInfoService;
 import com.ssh.xep.service.ToolTypesService;
 import com.ssh.xep.service.ToolsService;
 import com.ssh.xep.util.MakeBpmn;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 @Namespace("/flow")
 @Result(name = ActionSupport.ERROR, location = "/WEB-INF/error.jsp")
@@ -126,9 +128,9 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		}
 		int[] auths;
 		if (isAdmin) {
-			auths = new int[] { 1, 2 };
+			auths = new int[]{1, 2};
 		} else {
-			auths = new int[] { 2 };
+			auths = new int[]{2};
 		}
 		if (groupId != 0) {
 			infos = service.findAll(userId, groupId, auths, startDate, endDate);
@@ -153,15 +155,17 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		return SUCCESS;
 	}
 
-	@Action(value = "modify", results = { @Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
+	@Action(value = "modify", results = {@Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp")})
 	public String modify() throws DocumentException, ParserConfigurationException, TransformerFactoryConfigurationError,
 			TransformerException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
 		Integer userId = (Integer) ServletActionContext.getRequest().getSession().getAttribute("userId");
-		tools = toolService.findAll(userId);
-		toolTypes = toolTypesService.findAll();
-		groups = flowGroupInfoService.findAll();
+		try {
+			tools = toolService.findAll(userId);
+			toolTypes = toolTypesService.findAll();
+			groups = flowGroupInfoService.findAll();
+		}catch (Exception e) {e.printStackTrace();}
 		if (id == null) {
 			String flowName = ServletActionContext.getRequest().getParameter("flowName");
 			String authStr = ServletActionContext.getRequest().getParameter("auth");
@@ -173,15 +177,25 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 				ServletActionContext.getRequest().setAttribute("errorInformation", "缺少参数。");
 				return ERROR;
 			}
+			try {
+				Integer.parseInt(authStr);
+				Integer.parseInt(groupId);
+			} catch (Exception e) {
+				ServletActionContext.getRequest().setAttribute("errorInformation", "参数错误。");
+				return ERROR;
+			}
 
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
-			info.setFlow(new MakeBpmn(String.valueOf(userId)).get());
+			try {
+				info.setFlow(URLEncoder.encode(new MakeBpmn(String.valueOf(userId)).get(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+			}
 			info.setFlowNum(0);
 			info.setUserId(userId);
 			info.setName(flowName);
-			info.setAuth((short) 0);
-			info.setGroupId(1);
+			info.setAuth((short) Integer.parseInt(authStr));
+			info.setGroupId(Integer.parseInt(groupId));
 			id = String.valueOf(service.save(info));
 			info.setId(Integer.parseInt(id));
 		} else {
@@ -195,7 +209,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		return SUCCESS;
 	}
 
-	@Action(value = "modify-commit", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp") })
+	@Action(value = "modify-commit", results = {@Result(name = SUCCESS, location = "/WEB-INF/success.jsp")})
 	public String modifyCommit() throws ParserConfigurationException {
 		if (info.getFlow() == null || info.getFlow().equals("") || info.getId() == 0) {
 			ServletActionContext.getRequest().setAttribute("errorInformation", "数据缺失");

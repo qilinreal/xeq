@@ -1,16 +1,14 @@
 package com.ssh.xep.service.impl;
 
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.ssh.xep.dao.JobInfoDao;
+import com.ssh.xep.entity.JobInfo;
+import com.ssh.xep.service.JobInfoService;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssh.xep.dao.JobInfoDao;
-import com.ssh.xep.entity.JobInfo;
-import com.ssh.xep.service.JobInfoService;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 
 @Service("jobInfoService")
 public class JobInfoServiceImpl implements JobInfoService {

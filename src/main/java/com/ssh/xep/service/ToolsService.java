@@ -1,5 +1,6 @@
 package com.ssh.xep.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,11 +12,11 @@ import com.ssh.xep.entity.Tools;
 public interface ToolsService {
 	Tools load(Integer id);
 
-	Tools get(Integer id) throws DocumentException;
+	Tools get(Integer id) throws DocumentException, UnsupportedEncodingException;
 
-	List<Tools> findAll() throws DocumentException;
+	List<Tools> findAll() throws DocumentException, UnsupportedEncodingException;
 
-	List<Tools> findAll(Integer userId) throws DocumentException;
+	List<Tools> findAll(Integer userId) throws DocumentException, UnsupportedEncodingException;
 
 	void pessist(Tools entity);
 
@@ -35,7 +36,8 @@ public interface ToolsService {
 
 	/**
 	 * 因为现在还不明确数据库中存的是路径还是文件本身，因此使用这一个中间方法加以过渡
+	 * 此外
 	 * @return
 	 */
-	String getXML(String xmlOrPath);
+	String getXML(String xmlOrPath) throws UnsupportedEncodingException;
 }

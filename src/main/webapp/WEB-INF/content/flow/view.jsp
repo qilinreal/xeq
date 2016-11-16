@@ -17,11 +17,17 @@
 <title>流程基本信息</title>
 </head>
 <body>
-	<p>全部用户信息</p>
+	<p>用户全部流程 <input type="button" id="add" value="新增"><input type="button" id="delete" value="删除"></p>
 	<ul>
 	<c:forEach items="${infos }" var="info">
 		<li><pre>名字：${info.name }    用户ID：${info.userId }   节点数量：${info.flowNum }   <a target="_blank" href="flow/detail.action?id=${info.id}">json详情</a></pre></li>
 	</c:forEach>
 	</ul>
+
+<script>
+	document.getElementById('add').addEventListener('click', function () {
+		window.open('flow/modify.action?flowName=nihao&auth=1&groupId=1', '_blank');
+	})
+</script>
 </body>
 </html>

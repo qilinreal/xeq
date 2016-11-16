@@ -1,19 +1,15 @@
 package com.ssh.xep.util;
 
+import org.dom4j.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.QName;
-
 /**
  * 加载BPMN数据并生成对应文件。
- * 
+ *
  * @author qilin
  */
 public class LoadBpmn {
@@ -27,15 +23,11 @@ public class LoadBpmn {
 
 	/**
 	 * 在用户特定路径下生成bpmn文件，文件名是【userId】_【jobId】.bpmn，调用id是loadNamePrefix【userId】.【jobId】
-	 * 
-	 * @param xml
-	 *            xml文件
-	 * @param userId
-	 *            用户ID
-	 * @param jobId
-	 *            数据库中的job的ID
-	 * @param userRoot
-	 *            用户根目录，目前是tmp文件夹下的xep_【userId】文件夹
+	 *
+	 * @param xml      xml文件
+	 * @param userId   用户ID
+	 * @param jobId    数据库中的job的ID
+	 * @param userRoot 用户根目录，目前是tmp文件夹下的xep_【userId】文件夹
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
@@ -52,10 +44,10 @@ public class LoadBpmn {
 			userRoot += "/";
 		}
 		File bpmnDir = new File(userRoot + "bpmn/");
-		if(bpmnDir.isDirectory() == false) {
+		if (bpmnDir.isDirectory() == false) {
 			bpmnDir.delete();
 		}
-		if(bpmnDir.exists() == false) {
+		if (bpmnDir.exists() == false) {
 			bpmnDir.mkdirs();
 		}
 		File bpmnFile = new File(userRoot + "bpmn/" + userId + "_" + jobId + ".bpmn");

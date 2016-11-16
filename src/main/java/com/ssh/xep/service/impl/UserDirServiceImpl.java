@@ -1,16 +1,14 @@
 package com.ssh.xep.service.impl;
 
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.ssh.xep.dao.UserDirDao;
+import com.ssh.xep.entity.UserDir;
+import com.ssh.xep.service.UserDirService;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssh.xep.dao.UserDirDao;
-import com.ssh.xep.entity.UserDir;
-import com.ssh.xep.service.UserDirService;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 
 @Service("userDirService")
 public class UserDirServiceImpl implements UserDirService {

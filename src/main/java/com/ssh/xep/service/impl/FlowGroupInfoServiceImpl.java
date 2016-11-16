@@ -1,16 +1,14 @@
 package com.ssh.xep.service.impl;
 
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.ssh.xep.dao.FlowGroupInfoDao;
+import com.ssh.xep.entity.FlowGroupInfo;
+import com.ssh.xep.service.FlowGroupInfoService;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssh.xep.dao.FlowGroupInfoDao;
-import com.ssh.xep.entity.FlowGroupInfo;
-import com.ssh.xep.service.FlowGroupInfoService;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 
 @Service("flowGroupInfoService")
 public class FlowGroupInfoServiceImpl implements FlowGroupInfoService {

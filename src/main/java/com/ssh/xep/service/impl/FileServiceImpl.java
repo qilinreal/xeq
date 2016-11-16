@@ -1,16 +1,14 @@
 package com.ssh.xep.service.impl;
 
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.ssh.xep.dao.FileDao;
+import com.ssh.xep.entity.File;
+import com.ssh.xep.service.FileService;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssh.xep.dao.FileDao;
-import com.ssh.xep.entity.File;
-import com.ssh.xep.service.FileService;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 
 @Service("fileService")
 public class FileServiceImpl implements FileService {

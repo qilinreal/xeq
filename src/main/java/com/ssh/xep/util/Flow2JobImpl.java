@@ -1,5 +1,10 @@
 package com.ssh.xep.util;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,11 +12,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 
 // FINISH
 
@@ -125,7 +125,7 @@ public class Flow2JobImpl implements Flow2Job {
 				} else if (ref.equals("fromFlow")) {
 					int pos = value.lastIndexOf('-');
 					if (fileInfos.get(value).equals("0")) {
-						sb.append("/tmp/" + generateFileName(value.substring(0, pos), value.substring(pos)));
+						sb.append(UserProperties.TMP + generateFileName(value.substring(0, pos), value.substring(pos)));
 					} else {
 						sb.append("$");
 						sb.append(fileInfos.get(value));
@@ -135,7 +135,7 @@ public class Flow2JobImpl implements Flow2Job {
 			} else if (p.getName().equals("output")) {
 				String value = p.attributeValue("value");
 				if (value.equals("0")) {
-					String path = "/tmp/" + generateFileName(et.attributeValue("id"), p.attributeValue("id"));
+					String path = UserProperties.TMP + generateFileName(et.attributeValue("id"), p.attributeValue("id"));
 					sb.append(path);
 					sb.append(" ");
 				} else {
@@ -184,7 +184,7 @@ public class Flow2JobImpl implements Flow2Job {
 
 	/**
 	 * 获取script节点下需要执行的文本
-	 * 
+	 *
 	 * @return
 	 * @throws IOException
 	 */
@@ -229,7 +229,7 @@ public class Flow2JobImpl implements Flow2Job {
 
 	/**
 	 * 将该节点上的输出文件加入索引
-	 * 
+	 *
 	 * @param e
 	 */
 	private void indexOutputFile(Element tool) {
@@ -244,10 +244,9 @@ public class Flow2JobImpl implements Flow2Job {
 
 	/**
 	 * 目前将文件放进了tmp文件夹中
-	 * 
+	 *
 	 * @param domId
-	 * @param fileId
-	 *            输出文件在dom中的output节点上的id
+	 * @param fileId 输出文件在dom中的output节点上的id
 	 * @return
 	 */
 	private String generateFileName(String domId, String fileId) {
